@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { growdevers } from "./database/growdevers";
 import { Growdever } from "./models/growdever";
+import { GrowdeverController } from "./controllers/growdevers.controller";
 
 const app = express();
 app.use(express.json());
@@ -62,40 +63,22 @@ app.get("/growdevers/:id", (req: Request, res: Response) => {
 //criar growdevers
 // POST http://localhost:3333/growdevers
 app.post("/growdevers", (req: Request, res: Response) => {
-  try {
-    const { nome, idade } = req.body;
-
-
-    if (!nome) {
-      return res.status(400).send({
-        success: false,
-        message: "Nome was not providded",
-      });
-    }
-
-    if (!idade) {
-      return res.status(400).send({
-        success: false,
-        message: "Idade was not providded",
-      });
-    }
-
-    // const idAlready = growdevers.
-
-    const growdever = new Growdever( nome, idade);
-    growdevers.push(growdever);
-
-    return res.status(201).send({
-      success: true,
-      message: "Growdever was created",
-    });
-  } catch (error: any) {
-    return res.status(500).send({
-      success: false,
-      message: error.toString(),
-    });
-  }
+  return new GrowdeverController().create(req, res);
 });
+
+//ou
+
+/* 
+app.post("/growdevers", (req, res) =>
+  new GrowdeverController().create(req, res)
+);
+ */
+
+//ou
+
+/* 
+app.post("/growdevers", new GrowdeverController().create);
+ */
 
 app.listen(3333, () => {
   console.log("Api is running port 3333");
